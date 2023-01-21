@@ -12,7 +12,6 @@ import trash from '../../assets/images/icons/trash.svg';
 export default function Home() {
   return (
     <Container>
-
       <InputSearchContainer clear>
         <input type="text" placeholder="Pesquise pelo nome..." />
       </InputSearchContainer>
