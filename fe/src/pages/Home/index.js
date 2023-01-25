@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 
+import { useEffect, useState } from 'react';
 import {
   Container, InputSearchContainer, Header, ListContainer, Card,
 } from './styles';
@@ -10,6 +11,19 @@ import trash from '../../assets/images/icons/trash.svg';
 // import Loader from '../../components/Loader';
 
 export default function Home() {
+  const [contacts, setContacts] = useState([]);
+
+  useEffect(() => {
+    fetch('http://localhost:3001/contacts')
+      .then(async (response) => {
+        const json = await response.json();
+        setContacts(json);
+      })
+      .catch((error) => {
+        console.log('erro', error);
+      });
+  }, []);
+
   return (
     <Container>
       <InputSearchContainer clear>
@@ -17,7 +31,10 @@ export default function Home() {
       </InputSearchContainer>
 
       <Header>
-        <strong>3 contatos</strong>
+        <strong>
+          {contacts.length}
+          {contacts.length === 1 ? ' contato' : ' contatos'}
+        </strong>
         <Link to="/new">Novo contato</Link>
       </Header>
 
@@ -28,19 +45,23 @@ export default function Home() {
             <img src={arrow} alt="Arrow" />
           </button>
         </header>
+      </ListContainer>
 
-        <Card>
+      {contacts.map((contact) => (
+        <Card key={contact.id}>
           <div className="info">
             <div className="contact-name">
-              <strong>Gabriel Klein</strong>
-              <small>Instagram</small>
+              <strong>{contact.name}</strong>
+              {contact.category_name && (
+                <small>{contact.category_name}</small>
+              )}
             </div>
-            <span>gabrielklein289@hotmail.com</span>
-            <span>(47)991428153</span>
+            <span>{contact.email}</span>
+            <span>{contact.phone}</span>
           </div>
 
           <div className="actions">
-            <Link to="/edit/12">
+            <Link to={`/edit/${contact.id}`}>
               <img src={edit} alt="edit" />
             </Link>
             <button type="button">
@@ -48,7 +69,7 @@ export default function Home() {
             </button>
           </div>
         </Card>
-      </ListContainer>
+      ))}
     </Container>
   );
 }
