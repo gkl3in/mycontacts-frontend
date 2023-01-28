@@ -29,17 +29,16 @@ export default function Home() {
         setIsLoading(true);
 
         const contactsList = await ContactsService.listContacts(orderBy);
+
         setContacts(contactsList);
       } catch (error) {
-        console.log('error', error);
+        console.log('Erro ao receber a lista de contatos', error);
       } finally {
         setIsLoading(false);
       }
     }
 
     loadContacts();
-
-    return () => console.log('cleanup');
   }, [orderBy]);
 
   function handleToggleOrderBy() {
